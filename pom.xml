@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- Versão do modelo POM (quase sempre 4.0.0) -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Identificação do seu projeto -->
+    <groupId>com.meuprojeto</groupId>       <!-- "organização" / pacote base -->
+    <artifactId>reconhecimento-facial</artifactId> <!-- nome do projeto -->
+    <version>1.0.0</version>                <!-- versão do seu projeto -->
+    <packaging>jar</packaging>              <!-- tipo: jar, war, pom... -->
+
+    <!-- Propriedades (versões reutilizáveis, encoding, etc.) -->
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <!-- DEPENDÊNCIAS: aqui você declara as bibliotecas -->
+    <dependencies>
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacv-platform</artifactId>
+            <version>1.5.13</version>
+        </dependency>
+    </dependencies>
+
+</project>

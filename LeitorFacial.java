@@ -1,0 +1,122 @@
+import org.bytedeco.javacv.*;
+import org.bytedeco.opencv.opencv_core.*;
+import org.bytedeco.opencv.opencv_objdetect.CascadeClassifier;
+import org.bytedeco.opencv.opencv_face.LBPHFaceRecognizer;
+import static org.bytedeco.opencv.global.opencv_imgproc.*;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+public class LeitorFacial {
+
+    private static final String ARQUIVO_MODELO   = "modelo.yml";
+    private static final String ARQUIVO_NOMES    = "nomes.txt";
+    private static final double LIMIAR_CONFIANCA = 70.0;
+
+    private static Map<Integer, String> idParaNome = new HashMap<>();
+
+    /**
+     * Abre a câmera e tenta reconhecer. Quando reconhece, fecha e chama onSucesso(nome).
+     */
+    public static void executar(java.util.function.Consumer<String> onSucesso) {
+        new Thread(() -> {
+            try {
+                // 1. Verifica se o modelo existe
+                if (!new File(ARQUIVO_MODELO).exists()) {
+                    javax.swing.SwingUtilities.invokeLater(() ->
+                        javax.swing.JOptionPane.showMessageDialog(null,
+                            "Nenhum modelo encontrado.\nRode o CadastroFacial primeiro.",
+                            "Erro", javax.swing.JOptionPane.ERROR_MESSAGE));
+                    return;
+                }
+
+                // 2. Carrega modelo e nomes
+                LBPHFaceRecognizer recognizer = LBPHFaceRecognizer.create();
+                recognizer.read(ARQUIVO_MODELO);
+                carregarNomes();
+
+                CascadeClassifier detector = new CascadeClassifier("haarcascade_frontalface_default.xml");
+                OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
+                grabber.start();
+
+                CanvasFrame canvas = new CanvasFrame("Identificação Facial");
+                canvas.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+
+                OpenCVFrameConverter.ToMat converter = new OpenCVFrameConverter.ToMat();
+                Mat gray = new Mat();
+                RectVector faces = new RectVector();
+
+                String nomeReconhecido = null;
+
+                // 3. Loop de leitura
+                while (canvas.isVisible() && nomeReconhecido == null) {
+                    Frame frame = grabber.grab();
+                    if (frame == null) break;
+
+                    Mat color = converter.convert(frame);
+                    cvtColor(color, gray, COLOR_BGR2GRAY);
+                    detector.detectMultiScale(gray, faces, 1.1, 3, 0,
+                            new Size(80, 80), new Size());
+
+                    for (long i = 0; i < faces.size(); i++) {
+                        Rect r = faces.get(i);
+                        Mat rosto = new Mat(gray, r);
+                        Mat rostoRedim = new Mat();
+                        resize(rosto, rostoRedim, new Size(200, 200));
+
+                        int[] label = new int[1];
+                        double[] confidence = new double[1];
+                        recognizer.predict(rostoRedim, label, confidence);
+
+                        String texto;
+                        if (confidence[0] < LIMIAR_CONFIANCA) {
+                            texto = idParaNome.getOrDefault(label[0], "ID " + label[0]);
+                            nomeReconhecido = texto;
+                        } else {
+                            texto = "Desconhecido (" + (int) confidence[0] + ")";
+                        }
+
+                        rectangle(color,
+                                new Point(r.x(), r.y()),
+                                new Point(r.x() + r.width(), r.y() + r.height()),
+                                new Scalar(0, 255, 0, 0));
+                        putText(color, texto,
+                                new Point(r.x(), r.y() - 10),
+                                FONT_HERSHEY_SIMPLEX, 0.9,
+                                new Scalar(0, 255, 0, 0), 2, 0, false);
+                    }
+                    canvas.showImage(converter.convert(color));
+                }
+
+                grabber.stop();
+                canvas.dispose();
+
+                if (nomeReconhecido != null) {
+                    System.out.println("Reconhecido: " + nomeReconhecido);
+                    final String nf = nomeReconhecido;
+                    javax.swing.SwingUtilities.invokeLater(() -> onSucesso.accept(nf));
+                } else {
+                    System.out.println("Reconhecimento cancelado.");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    private static void carregarNomes() {
+        idParaNome.clear();
+        try (java.io.BufferedReader br = new java.io.BufferedReader(
+                new java.io.FileReader(ARQUIVO_NOMES))) {
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                String[] p = linha.split(";", 2);
+                if (p.length == 2) idParaNome.put(Integer.parseInt(p[0]), p[1]);
+            }
+        } catch (Exception ex) {
+            System.err.println("Aviso: não foi possível carregar nomes.txt");
+        }
+    }
+}
