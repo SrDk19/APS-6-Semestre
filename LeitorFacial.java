@@ -14,12 +14,15 @@ public class LeitorFacial {
     private static final String ARQUIVO_NOMES    = "nomes.txt";
     private static final double LIMIAR_CONFIANCA = 70.0;
 
-    private static Map<Integer, String> idParaNome = new HashMap<>();
+    private static Map<Integer, String> idParaNome  = new HashMap<>();
+    private static Map<Integer, String> idParaNivel = new HashMap<>();
 
     /**
-     * Abre a câmera e tenta reconhecer. Quando reconhece, fecha e chama onSucesso(nome).
+     * Abre a câmera e tenta reconhecer uma pessoa DO NÍVEL ESPECIFICADO.
+     * @param nivelEsperado "nivel2" ou "nivel3"
+     * @param onSucesso callback chamado com o nome reconhecido
      */
-    public static void executar(java.util.function.Consumer<String> onSucesso) {
+    public static void executar(String nivelEsperado, java.util.function.Consumer<String> onSucesso) {
         new Thread(() -> {
             try {
                 // 1. Verifica se o modelo existe
@@ -31,7 +34,7 @@ public class LeitorFacial {
                     return;
                 }
 
-                // 2. Carrega modelo e nomes
+                // 2. Carrega modelo + nomes + níveis
                 LBPHFaceRecognizer recognizer = LBPHFaceRecognizer.create();
                 recognizer.read(ARQUIVO_MODELO);
                 carregarNomes();
@@ -40,7 +43,7 @@ public class LeitorFacial {
                 OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
                 grabber.start();
 
-                CanvasFrame canvas = new CanvasFrame("Identificação Facial");
+                CanvasFrame canvas = new CanvasFrame("Identificação - " + nivelEsperado);
                 canvas.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
 
                 OpenCVFrameConverter.ToMat converter = new OpenCVFrameConverter.ToMat();
@@ -71,8 +74,16 @@ public class LeitorFacial {
 
                         String texto;
                         if (confidence[0] < LIMIAR_CONFIANCA) {
-                            texto = idParaNome.getOrDefault(label[0], "ID " + label[0]);
-                            nomeReconhecido = texto;
+                            String nome  = idParaNome.getOrDefault(label[0], "ID " + label[0]);
+                            String nivel = idParaNivel.getOrDefault(label[0], "?");
+
+                            // ★ Filtro de nível: só aceita se for do nível esperado
+                            if (nivel.equals(nivelEsperado)) {
+                                texto = nome;
+                                nomeReconhecido = nome;
+                            } else {
+                                texto = nome + " (" + nivel + ") - nível errado";
+                            }
                         } else {
                             texto = "Desconhecido (" + (int) confidence[0] + ")";
                         }
@@ -93,7 +104,7 @@ public class LeitorFacial {
                 canvas.dispose();
 
                 if (nomeReconhecido != null) {
-                    System.out.println("Reconhecido: " + nomeReconhecido);
+                    System.out.println("Reconhecido (" + nivelEsperado + "): " + nomeReconhecido);
                     final String nf = nomeReconhecido;
                     javax.swing.SwingUtilities.invokeLater(() -> onSucesso.accept(nf));
                 } else {
@@ -108,12 +119,17 @@ public class LeitorFacial {
 
     private static void carregarNomes() {
         idParaNome.clear();
+        idParaNivel.clear();
         try (java.io.BufferedReader br = new java.io.BufferedReader(
                 new java.io.FileReader(ARQUIVO_NOMES))) {
             String linha;
             while ((linha = br.readLine()) != null) {
-                String[] p = linha.split(";", 2);
-                if (p.length == 2) idParaNome.put(Integer.parseInt(p[0]), p[1]);
+                String[] p = linha.split(";");
+                if (p.length >= 2) {
+                    int id = Integer.parseInt(p[0]);
+                    idParaNome.put(id, p[1]);
+                    if (p.length >= 3) idParaNivel.put(id, p[2]);
+                }
             }
         } catch (Exception ex) {
             System.err.println("Aviso: não foi possível carregar nomes.txt");
