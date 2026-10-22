@@ -6,7 +6,7 @@ public class Janela_Teste extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(600,400);
-        setLayout(null);
+        
     }
     public static void main(String[]args)
     {
