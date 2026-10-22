@@ -14,8 +14,8 @@ public class Janela_Teste extends JFrame{
     }
     public static void main(String[]args)
     {
-        Janela_Teste J = new Janela_Teste();
-        J.setVisible(true);
+        Janela_Teste janela = new Janela_Teste();
+        janela.setVisible(true);
     }
 
 }
