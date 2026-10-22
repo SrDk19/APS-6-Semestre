@@ -1,9 +1,4 @@
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import java.awt.Font;
-import java.awt.BorderLayout;
-
-import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -31,23 +26,18 @@ public class Janela4 extends JFrame {
         JButton btnNivel2 = new JButton("Nível 2");
         JButton btnNivel3 = new JButton("Nível 3");
 
-        // Cada botão passa um nível diferente
         btnNivel2.addActionListener(e -> CadastroFacial.executar("nivel2"));
         btnNivel3.addActionListener(e -> CadastroFacial.executar("nivel3"));
 
-        // Linha 0: título (ocupa 2 colunas)
         gbc.gridy = 0;
         gbc.gridx = 0;
         gbc.gridwidth = 2;
         painel.add(titulo, gbc);
 
-        // Linha 1: os dois botões
         gbc.gridy = 1;
         gbc.gridwidth = 1;
-
         gbc.gridx = 0;
         painel.add(btnNivel2, gbc);
-
         gbc.gridx = 1;
         painel.add(btnNivel3, gbc);
 

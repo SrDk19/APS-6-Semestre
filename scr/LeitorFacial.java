@@ -14,18 +14,9 @@ public class LeitorFacial {
     private static final String ARQUIVO_NOMES    = "nomes.txt";
     private static final double LIMIAR_CONFIANCA = 70.0;
 
-    private static Map<Integer, String> idParaNome  = new HashMap<>();
-    private static Map<Integer, String> idParaNivel = new HashMap<>();
-
-    /**
-     * Abre a câmera e tenta reconhecer uma pessoa DO NÍVEL ESPECIFICADO.
-     * @param nivelEsperado "nivel2" ou "nivel3"
-     * @param onSucesso callback chamado com o nome reconhecido
-     */
     public static void executar(String nivelEsperado, java.util.function.Consumer<String> onSucesso) {
         new Thread(() -> {
             try {
-                // 1. Verifica se o modelo existe
                 if (!new File(ARQUIVO_MODELO).exists()) {
                     javax.swing.SwingUtilities.invokeLater(() ->
                         javax.swing.JOptionPane.showMessageDialog(null,
@@ -34,12 +25,20 @@ public class LeitorFacial {
                     return;
                 }
 
-                // 2. Carrega modelo + nomes + níveis
+                // Mapas LOCAIS (evita condição de corrida entre janelas)
+                Map<Integer, String> idParaNome  = new HashMap<>();
+                Map<Integer, String> idParaNivel = new HashMap<>();
+                carregarNomes(idParaNome, idParaNivel);
+
                 LBPHFaceRecognizer recognizer = LBPHFaceRecognizer.create();
                 recognizer.read(ARQUIVO_MODELO);
-                carregarNomes();
 
                 CascadeClassifier detector = new CascadeClassifier("haarcascade_frontalface_default.xml");
+                if (detector.empty()) {
+                    System.err.println("Erro: modelo Haar não carregado.");
+                    return;
+                }
+
                 OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
                 grabber.start();
 
@@ -52,7 +51,6 @@ public class LeitorFacial {
 
                 String nomeReconhecido = null;
 
-                // 3. Loop de leitura
                 while (canvas.isVisible() && nomeReconhecido == null) {
                     Frame frame = grabber.grab();
                     if (frame == null) break;
@@ -77,7 +75,6 @@ public class LeitorFacial {
                             String nome  = idParaNome.getOrDefault(label[0], "ID " + label[0]);
                             String nivel = idParaNivel.getOrDefault(label[0], "?");
 
-                            // ★ Filtro de nível: só aceita se for do nível esperado
                             if (nivel.equals(nivelEsperado)) {
                                 texto = nome;
                                 nomeReconhecido = nome;
@@ -117,9 +114,8 @@ public class LeitorFacial {
         }).start();
     }
 
-    private static void carregarNomes() {
-        idParaNome.clear();
-        idParaNivel.clear();
+    private static void carregarNomes(Map<Integer, String> idParaNome,
+                                      Map<Integer, String> idParaNivel) {
         try (java.io.BufferedReader br = new java.io.BufferedReader(
                 new java.io.FileReader(ARQUIVO_NOMES))) {
             String linha;

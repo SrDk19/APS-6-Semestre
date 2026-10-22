@@ -1,9 +1,8 @@
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.BorderLayout;
-import javax.swing.*;
-import java.awt.*;
 
 public class Janela5 extends JFrame {
 

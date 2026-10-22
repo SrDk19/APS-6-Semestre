@@ -15,10 +15,6 @@ public class CadastroFacial {
     private static final String PASTA_FOTOS    = "fotos";
     private static final int FOTOS_POR_PESSOA  = 20;
 
-    /**
-     * Executa o cadastro para um nível específico.
-     * @param nivel "nivel2" ou "nivel3"
-     */
     public static void executar(String nivel) {
         if (!nivel.equals("nivel2") && !nivel.equals("nivel3")) {
             javax.swing.JOptionPane.showMessageDialog(null,
@@ -33,30 +29,29 @@ public class CadastroFacial {
             System.out.println("Cadastro cancelado.");
             return;
         }
-        nome = nome.trim().replaceAll("[^a-zA-Z0-9_-]", "_");
+        final String nomeFinal = nome.trim().replaceAll("[^a-zA-Z0-9_-]", "_");
 
-        try {
-            capturarETreinar(nome, nivel);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // ★ Roda captura em thread separada (CanvasFrame do JavaCV não gosta da EDT)
+        new Thread(() -> {
+            try {
+                capturarETreinar(nomeFinal, nivel);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
-    // Mantém compatibilidade se alguém chamar sem nível (usa nivel2 como padrão)
     public static void executar() {
         executar("nivel2");
     }
 
     public static void main(String[] args) {
-        executar("nivel2"); // teste rápido
+        executar("nivel2");
     }
-
-    // ---------- Captura + treino ----------
 
     private static void capturarETreinar(String nome, String nivel) throws Exception {
         System.out.println("Cadastrando '" + nome + "' no " + nivel);
 
-        // Pasta específica do nível: fotos/nivel2/<nome> ou fotos/nivel3/<nome>
         File pastaPessoa = new File(PASTA_FOTOS + File.separator + nivel, nome);
         pastaPessoa.mkdirs();
 
@@ -124,18 +119,16 @@ public class CadastroFacial {
         System.out.println("Treinando modelo...");
         treinarModelo();
 
-        javax.swing.JOptionPane.showMessageDialog(null,
+        // ★ Diálogo final de volta na EDT
+        javax.swing.SwingUtilities.invokeLater(() ->
+            javax.swing.JOptionPane.showMessageDialog(null,
                 "Cadastro de '" + nome + "' (" + nivel + ") concluído!\nModelo atualizado.",
-                "Sucesso", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                "Sucesso", javax.swing.JOptionPane.INFORMATION_MESSAGE));
     }
 
-    // ---------- Treino percorrendo fotos/nivel2 e fotos/nivel3 ----------
-
     private static void treinarModelo() {
-        CascadeClassifier detector = new CascadeClassifier("haarcascade_frontalface_default.xml");
         LBPHFaceRecognizer recognizer = LBPHFaceRecognizer.create();
 
-        // id -> "nome;nivel"  (usaremos LinkedHashMap para IDs estáveis)
         Map<Integer, String[]> idParaInfo = new LinkedHashMap<>();
         List<Mat> rostos = new ArrayList<>();
         List<Integer> labels = new ArrayList<>();
@@ -149,7 +142,7 @@ public class CadastroFacial {
 
         int id = 0;
         for (File pastaNivel : pastasNivel) {
-            String nivel = pastaNivel.getName(); // "nivel2" ou "nivel3"
+            String nivel = pastaNivel.getName();
             File[] pastasPessoas = pastaNivel.listFiles(File::isDirectory);
             if (pastasPessoas == null) continue;
 
@@ -196,7 +189,6 @@ public class CadastroFacial {
         recognizer.train(rostosVector, labelsMat);
         recognizer.save(ARQUIVO_MODELO);
 
-        // Salva nomes.txt no formato: id;nome;nivel
         try (java.io.PrintWriter pw = new java.io.PrintWriter(ARQUIVO_NOMES)) {
             for (Map.Entry<Integer, String[]> e : idParaInfo.entrySet()) {
                 pw.println(e.getKey() + ";" + e.getValue()[0] + ";" + e.getValue()[1]);
