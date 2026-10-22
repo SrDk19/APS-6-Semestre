@@ -17,5 +17,4 @@ public class Janela_Teste extends JFrame{
         Janela_Teste janela = new Janela_Teste();
         janela.setVisible(true);
     }
-
 }
