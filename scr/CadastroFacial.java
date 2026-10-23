@@ -3,7 +3,7 @@ import org.bytedeco.opencv.opencv_core.*;
 import org.bytedeco.opencv.opencv_objdetect.CascadeClassifier;
 import org.bytedeco.opencv.opencv_face.LBPHFaceRecognizer;
 import org.bytedeco.opencv.global.opencv_imgcodecs;
-import static org.bytedeco.opencv.global.opencv_imgproc.*;
+import org.bytedeco.opencv.global.opencv_imgproc.*;
 
 import java.io.File;
 import java.util.*;
