@@ -2,11 +2,10 @@ import org.bytedeco.javacv.*;
 import org.bytedeco.opencv.opencv_core.*;
 import org.bytedeco.opencv.opencv_objdetect.CascadeClassifier;
 import org.bytedeco.opencv.opencv_face.LBPHFaceRecognizer;
-import static org.bytedeco.opencv.global.opencv_imgproc.*;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import static org.bytedeco.opencv.global.opencv_imgproc.*;
 
 public class LeitorFacial {
 
