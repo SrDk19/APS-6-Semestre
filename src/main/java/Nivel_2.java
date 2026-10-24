@@ -3,14 +3,20 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.BorderLayout;
+import java.awt.Toolkit;
+import java.awt.Dimension;
 
-public class Janela5 extends JFrame {
+public class Nivel_2 extends JFrame {
 
-    public Janela5() {
+    public Nivel_2() {
         setTitle("Nível 2 - Identificação Facial");
-        setSize(400, 300);
-        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Dimension tamanho_tela = Toolkit.getDefaultToolkit().getScreenSize();
+        int largura = (int) (tamanho_tela.width * 0.5);
+        int altura = (int) (tamanho_tela.height * 0.5);
+        setSize(largura, altura);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
 
         JLabel label = new JLabel("Aguardando identificação facial (Nível 2)...", JLabel.CENTER);
         label.setFont(new Font("Arial", Font.BOLD, 16));

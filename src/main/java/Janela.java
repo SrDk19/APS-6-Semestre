@@ -27,28 +27,28 @@ public class Janela extends JFrame {
         botao1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new Janela1().setVisible(true);
+                new Nivel_1().setVisible(true);
             }
         });
 
         botao2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new Janela5().setVisible(true);
+                new Nivel_2().setVisible(true);
             }
         });
 
         botao3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new Janela3().setVisible(true);
+                new Nivel_3().setVisible(true);
             }
         });
 
         botao4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new Janela4().setVisible(true);
+                new Janela_Cadastro().setVisible(true);
             }
         });
 

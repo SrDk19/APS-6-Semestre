@@ -7,12 +7,18 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Font;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 
-public class Janela4 extends JFrame {
 
-    public Janela4() {
-        setTitle("Tela 4 - Cadastro Facial");
-        setSize(400, 300);
+public class Janela_Cadastro extends JFrame {
+
+    public Janela_Cadastro() {
+        setTitle("Cadastro Facial");
+        Dimension tamanho_tela = Toolkit.getDefaultToolkit().getScreenSize();
+        int largura = (int) (tamanho_tela.width * 0.5);
+        int altura = (int) (tamanho_tela.height * 0.5);
+        setSize(largura, altura);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -23,9 +29,11 @@ public class Janela4 extends JFrame {
         JLabel titulo = new JLabel("Escolha o nível para cadastro", JLabel.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 16));
 
+        JButton btnNivel1 = new JButton("Nível 1");
         JButton btnNivel2 = new JButton("Nível 2");
         JButton btnNivel3 = new JButton("Nível 3");
-
+        
+        btnNivel1.addActionListener(e -> CadastroFacial.executar("nivel1"));
         btnNivel2.addActionListener(e -> CadastroFacial.executar("nivel2"));
         btnNivel3.addActionListener(e -> CadastroFacial.executar("nivel3"));
 
