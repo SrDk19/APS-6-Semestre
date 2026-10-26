@@ -12,10 +12,10 @@ public class CadastroFacial {
     private static final String ARQUIVO_MODELO = "modelo.yml";
     private static final String ARQUIVO_NOMES  = "nomes.txt";
     private static final String PASTA_FOTOS    = "fotos";
-    private static final int FOTOS_POR_PESSOA  = 20;
+    private static final int FOTOS_POR_PESSOA  = 10;
 
     public static void executar(String nivel) {
-        if (!nivel.equals("nivel2") && !nivel.equals("nivel3")) {
+        if (!nivel.equals("Nível 2") && !nivel.equals("Nível 3")) {
             javax.swing.JOptionPane.showMessageDialog(null,
                     "Nível inválido: " + nivel,
                     "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
@@ -41,11 +41,11 @@ public class CadastroFacial {
     }
 
     public static void executar() {
-        executar("nivel2");
+        executar("Nível 2");
     }
 
     public static void main(String[] args) {
-        executar("nivel2");
+        executar("Nível 2");
     }
 
     private static void capturarETreinar(String nome, String nivel) throws Exception {
