@@ -14,32 +14,61 @@ public class CadastroFacial {
     private static final String PASTA_FOTOS    = "fotos";
     private static final int FOTOS_POR_PESSOA  = 10;
 
+    /**
+     * Executa o cadastro. Aceita qualquer variação de nível:
+     * "Nível 2", "nivel2", "NIVEL 2", "nivel 2", etc.
+     * Internamente converte para "nivel2" ou "nivel3".
+     */
     public static void executar(String nivel) {
-        if (!nivel.equals("Nível 2") && !nivel.equals("Nível 3")) {
+        String nivelCanonico = normalizarNivel(nivel);
+
+        if (nivelCanonico == null) {
             javax.swing.JOptionPane.showMessageDialog(null,
-                    "Nível inválido: " + nivel,
+                    "Nível inválido: '" + nivel + "'\n" +
+                    "Esperado: 'Nível 2' ou 'Nível 3'.",
                     "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         String nome = javax.swing.JOptionPane.showInputDialog(
-                "Digite o nome da pessoa a ser cadastrada no " + nivel + ":");
+                "Digite o nome da pessoa a ser cadastrada no " + nivelCanonico + ":");
         if (nome == null || nome.trim().isEmpty()) {
             System.out.println("Cadastro cancelado.");
             return;
         }
         final String nomeFinal = nome.trim().replaceAll("[^a-zA-Z0-9_-]", "_");
 
-        // ★ Roda captura em thread separada (CanvasFrame do JavaCV não gosta da EDT)
         new Thread(() -> {
             try {
-                capturarETreinar(nomeFinal, nivel);
+                capturarETreinar(nomeFinal, nivelCanonico);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();
     }
 
+    /**
+     * Normaliza o nível recebido para "nivel2" ou "nivel3".
+     * Retorna null se não for reconhecido.
+     */
+    private static String normalizarNivel(String nivel) {
+        if (nivel == null) return null;
+
+        // Minúsculo, sem espaços, sem acentos comuns
+        String s = nivel.trim().toLowerCase()
+                .replace("í", "i")
+                .replace("é", "e")
+                .replace(" ", "");
+
+        // Remove o "nível"/"nivel" do início, se houver
+        s = s.replace("nivel", "");  // "nivel2" -> "2"; "nivel 2" -> "2" (já removeu espaço)
+
+        if (s.equals("2")) return "nivel2";
+        if (s.equals("3")) return "nivel3";
+        return null;
+    }
+
+    // Mantém compatibilidade
     public static void executar() {
         executar("Nível 2");
     }
@@ -60,7 +89,7 @@ public class CadastroFacial {
             return;
         }
 
-        FFmpegFrameGrabber grabber = new FFmpegFrameGrabber (null, 0);
+        FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(null, 0);
         grabber.start();
 
         CanvasFrame canvas = new CanvasFrame("Cadastro " + nivel + " - " + nome);
@@ -118,7 +147,6 @@ public class CadastroFacial {
         System.out.println("Treinando modelo...");
         treinarModelo();
 
-        // ★ Diálogo final de volta na EDT
         javax.swing.SwingUtilities.invokeLater(() ->
             javax.swing.JOptionPane.showMessageDialog(null,
                 "Cadastro de '" + nome + "' (" + nivel + ") concluído!\nModelo atualizado.",
