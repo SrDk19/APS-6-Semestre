@@ -89,8 +89,12 @@ public class CadastroFacial {
             return;
         }
 
-        FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(null, 0);
+        /*OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);*/
+        FFmpegFrameGrabber grabber = new FFmpegFrameGrabber("video=Integrated Camera");
+        grabber.setFormat("dshow");   // importante no Windows
+
         grabber.start();
+
 
         CanvasFrame canvas = new CanvasFrame("Cadastro " + nivel + " - " + nome);
         canvas.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
