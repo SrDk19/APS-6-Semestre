@@ -38,7 +38,7 @@ public class LeitorFacial {
                     return;
                 }
 
-                OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
+                FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(null, 0);
                 grabber.start();
 
                 CanvasFrame canvas = new CanvasFrame("Identificação - " + nivelEsperado);

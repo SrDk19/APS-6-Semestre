@@ -60,7 +60,7 @@ public class CadastroFacial {
             return;
         }
 
-        OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
+        FFmpegFrameGrabber grabber = new FFmpegFrameGrabber (null, 0);
         grabber.start();
 
         CanvasFrame canvas = new CanvasFrame("Cadastro " + nivel + " - " + nome);
