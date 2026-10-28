@@ -28,6 +28,14 @@
             <artifactId>javacv-platform</artifactId>
             <version>1.5.13</version>
         </dependency>
+        
+        <!-- FlatLaf = melhoria na aparência -->
+
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.5.4</version>
+        </dependency>
     </dependencies>
 
     <build>

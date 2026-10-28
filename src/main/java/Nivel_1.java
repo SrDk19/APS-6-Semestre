@@ -1,5 +1,7 @@
+import com.formdev.flatlaf.FlatDarkLaf;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 import java.awt.Font;
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
@@ -21,7 +23,10 @@ public class Nivel_1 extends JFrame {
     }
     public static void main(String[]args)
     {
-        Nivel_1 janela = new Nivel_1();
-        janela.setVisible(true);
+        FlatDarkLaf.setup(); // Tema escuro por padrão.
+        SwingUtilities.invokeLater(() -> {
+            Nivel_1 janela = new Nivel_1();
+            janela.setVisible(true);
+        });
     }
 }
