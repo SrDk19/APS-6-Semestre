@@ -2,7 +2,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import java.awt.Font;
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
@@ -27,12 +26,9 @@ public class Nivel_2 extends Nivel_1 {
         label.setFont(new Font("Arial", Font.BOLD, 16));
         add(label, BorderLayout.CENTER);
 
-        LeitorFacial.executar("nivel2", nome -> {
+        LeitorFacial.executar("Nível 2", nome -> {
             label.setText("Bem-vindo, " + nome + "! (Nível 2)");
-            JOptionPane.showMessageDialog(this,
-                    "Acesso Nível 2 liberado para: " + nome,
-                    "Acesso concedido",
-                    JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Acesso Nível 2 liberado para: " + nome, "Acesso concedido", JOptionPane.INFORMATION_MESSAGE);
         });
     }
 }

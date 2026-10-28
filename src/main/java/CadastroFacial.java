@@ -12,7 +12,7 @@ public class CadastroFacial {
     private static final String ARQUIVO_MODELO = "modelo.yml";
     private static final String ARQUIVO_NOMES  = "nomes.txt";
     private static final String PASTA_FOTOS    = "fotos";
-    private static final int FOTOS_POR_PESSOA  = 10;
+    private static final int FOTOS_POR_PESSOA  = 4;
 
     /**
      * Executa o cadastro. Aceita qualquer variação de nível:
@@ -61,10 +61,10 @@ public class CadastroFacial {
                 .replace(" ", "");
 
         // Remove o "nível"/"nivel" do início, se houver
-        s = s.replace("nivel", "");  // "nivel2" -> "2"; "nivel 2" -> "2" (já removeu espaço)
+        s = s.replace("Nível", "");  // "nivel2" -> "2"; "nivel 2" -> "2" (já removeu espaço)
 
-        if (s.equals("2")) return "nivel2";
-        if (s.equals("3")) return "nivel3";
+        if (s.equals("2")) return "Nível 2";
+        if (s.equals("3")) return "Nível 3";
         return null;
     }
 
@@ -97,7 +97,7 @@ public class CadastroFacial {
         return;
 }
 
-        OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
+        OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(1);
 
         grabber.setFormat("dshow");   // importante no Windows
 

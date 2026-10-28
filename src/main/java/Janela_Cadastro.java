@@ -30,12 +30,12 @@ public class Janela_Cadastro extends JFrame {
         titulo.setFont(new Font("Arial", Font.BOLD, 16));
 
         JButton btnNivel1 = new JButton("Nível 1");
-        JButton btnNivel2 = new JButton("Nível2");
-        JButton btnNivel3 = new JButton("Nível3");
+        JButton btnNivel2 = new JButton("Nível 2");
+        JButton btnNivel3 = new JButton("Nível 3");
         
-        btnNivel1.addActionListener(e -> CadastroFacial.executar("nivel1"));
-        btnNivel2.addActionListener(e -> CadastroFacial.executar("nivel2"));
-        btnNivel3.addActionListener(e -> CadastroFacial.executar("nivel3"));
+        btnNivel1.addActionListener(e -> CadastroFacial.executar("Nível 1"));
+        btnNivel2.addActionListener(e -> CadastroFacial.executar("Nível 2"));
+        btnNivel3.addActionListener(e -> CadastroFacial.executar("Nível 3"));
 
         gbc.gridy = 0;
         gbc.gridx = 0;
