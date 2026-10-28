@@ -1,6 +1,9 @@
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+import com.formdev.flatlaf.FlatDarkLaf;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -10,7 +13,7 @@ import java.awt.event.ActionListener;
 public class Janela extends JFrame {
 
     public Janela() {
-        setTitle("teste");
+        setTitle("Main");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
@@ -18,10 +21,10 @@ public class Janela extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JButton botao1 = new JButton("nivel 1");
-        JButton botao2 = new JButton("Nivel 2");
-        JButton botao3 = new JButton("nivel 3");
-        JButton botao4 = new JButton("Adicionar Usuario");
+        JButton botao1 = new JButton("Nível 1");
+        JButton botao2 = new JButton("Nível 2");
+        JButton botao3 = new JButton("Nível 3");
+        JButton botao4 = new JButton("Adicionar Usuário");
 
         // Ações dos botões
         botao1.addActionListener(new ActionListener() {
@@ -67,6 +70,7 @@ public class Janela extends JFrame {
     }
 
     public static void main(String[] args) {
-        new Janela().setVisible(true);
+        Visual_Niveis.config_Tema();
+        SwingUtilities.invokeLater(() -> new Janela().setVisible(true));
     }
 }

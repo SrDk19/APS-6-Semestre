@@ -1,12 +1,14 @@
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import java.awt.Font;
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
 import java.awt.Dimension;
 
-public class Nivel_2 extends JFrame {
+public class Nivel_2 extends Nivel_1 {
 
     public Nivel_2() {
         setTitle("Nível 2 - Identificação Facial");
@@ -17,6 +19,9 @@ public class Nivel_2 extends JFrame {
         setSize(largura, altura);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
+
+        JPanel painel = new JPanel(new BorderLayout());
+        add(painel);
 
         JLabel label = new JLabel("Aguardando identificação facial (Nível 2)...", JLabel.CENTER);
         label.setFont(new Font("Arial", Font.BOLD, 16));
