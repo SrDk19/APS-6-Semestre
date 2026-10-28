@@ -46,7 +46,7 @@ public class LeitorFacial {
                     return;
                 }
 
-                OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
+                OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(1);
                 grabber.start();
 
                 CanvasFrame canvas = new CanvasFrame("Identificação - " + nivelEsperado);
@@ -86,7 +86,7 @@ public class LeitorFacial {
                                 texto = nome;
                                 nomeReconhecido = nome;
                             } else {
-                                texto = nome + " (" + nivel + ") - nível errado";
+                                texto = nome + " (" + nivel + ") - Nível errado";
                             }
                         } else {
                             texto = "Desconhecido (" + (int) confidence[0] + ")";

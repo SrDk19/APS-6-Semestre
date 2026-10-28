@@ -61,7 +61,7 @@ public class CadastroFacial {
                 .replace(" ", "");
 
         // Remove o "nível"/"nivel" do início, se houver
-        s = s.replace("Nível", "");  // "nivel2" -> "2"; "nivel 2" -> "2" (já removeu espaço)
+        s = s.replace("nivel", "");  // "nivel2" -> "2"; "nivel 2" -> "2" (já removeu espaço)
 
         if (s.equals("2")) return "Nível 2";
         if (s.equals("3")) return "Nível 3";
@@ -70,11 +70,11 @@ public class CadastroFacial {
 
     // Mantém compatibilidade
     public static void executar() {
-        executar("Nível 2");
+        executar("Nivel_2");
     }
 
     public static void main(String[] args) {
-        executar("Nível 2");
+        executar("Nivel_2");
     }
 
     private static void capturarETreinar(String nome, String nivel) throws Exception {
