@@ -12,7 +12,7 @@ public class CadastroFacial {
     private static final String ARQUIVO_MODELO = "modelo.yml";
     private static final String ARQUIVO_NOMES  = "nomes.txt";
     private static final String PASTA_FOTOS    = "fotos";
-    private static final int FOTOS_POR_PESSOA  = 4;
+    private static final int FOTOS_POR_PESSOA  = 10;
 
     /**
      * Executa o cadastro. Aceita qualquer variação de nível:
