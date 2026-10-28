@@ -15,7 +15,7 @@ public class Visual_Niveis extends JFrame {
 
     protected static final Color cor_titulo = Color.decode("#FF7518");
     protected static final Color fundo_janela = Color.decode("#1C1C1E");
-    protected static final Color borda_janela = Color.decode("#121214");
+    protected static final Color borda_janela = Color.decode("#6a0087");
     protected static final Color letra = Color.decode("#AAA096");
 
     protected final JPanel painel = new JPanel(new BorderLayout());
