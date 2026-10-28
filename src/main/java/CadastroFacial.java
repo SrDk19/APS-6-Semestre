@@ -83,14 +83,22 @@ public class CadastroFacial {
         File pastaPessoa = new File(PASTA_FOTOS + File.separator + nivel, nome);
         pastaPessoa.mkdirs();
 
-        CascadeClassifier detector = new CascadeClassifier("haarcascade_frontalface_default.xml");
+        File xml = new File("haarcascade_frontalface_default.xml");
+        if (!xml.exists()) {
+        javax.swing.SwingUtilities.invokeLater(() ->
+        javax.swing.JOptionPane.showMessageDialog(null,
+            "Arquivo não encontrado:\n" + xml.getAbsolutePath(),
+            "Erro", javax.swing.JOptionPane.ERROR_MESSAGE));
+        return;
+}
+        CascadeClassifier detector = new CascadeClassifier(xml.getAbsolutePath());
         if (detector.empty()) {
-            System.err.println("Erro: modelo Haar não carregado.");
-            return;
-        }
+        System.err.println("Erro: modelo Haar não pôde ser carregado mesmo existindo.");
+        return;
+}
 
-        /*OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);*/
-        FFmpegFrameGrabber grabber = new FFmpegFrameGrabber("video=Integrated Camera");
+        OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
+
         grabber.setFormat("dshow");   // importante no Windows
 
         grabber.start();

@@ -32,13 +32,21 @@ public class LeitorFacial {
                 LBPHFaceRecognizer recognizer = LBPHFaceRecognizer.create();
                 recognizer.read(ARQUIVO_MODELO);
 
-                CascadeClassifier detector = new CascadeClassifier("haarcascade_frontalface_default.xml");
+                File xml = new File("haarcascade_frontalface_default.xml");
+                if (!xml.exists()) {
+                    javax.swing.SwingUtilities.invokeLater(() ->
+                        javax.swing.JOptionPane.showMessageDialog(null,
+                            "Arquivo não encontrado:\n" + xml.getAbsolutePath(),
+                            "Erro", javax.swing.JOptionPane.ERROR_MESSAGE));
+                    return;
+                }
+                CascadeClassifier detector = new CascadeClassifier(xml.getAbsolutePath());
                 if (detector.empty()) {
-                    System.err.println("Erro: modelo Haar não carregado.");
+                    System.err.println("Erro: modelo Haar não pôde ser carregado mesmo existindo.");
                     return;
                 }
 
-                FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(null, 0);
+                OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
                 grabber.start();
 
                 CanvasFrame canvas = new CanvasFrame("Identificação - " + nivelEsperado);
